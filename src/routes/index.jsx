@@ -1,7 +1,9 @@
 import Home from "../pages/home"
 import Products from "../pages/products"
-import Layout from "../layouts"
+import Layout from "../layouts/loja"
 import ProductDetail from "../pages/product-detail"
+import LayoutAuth from "../layouts/auth"
+import Login from "../pages/auth/login"
 
 const routes = [
     {
@@ -24,6 +26,17 @@ const routes = [
                 path: "/product-detail/:id",
                 element: <ProductDetail />
             },
+            {
+                path: "/auth",
+                element: <LayoutAuth />,
+                children: [
+                    {
+                        path: "login",
+                        element: <Login />,
+                    }
+                ]
+            },
+
         ]
     },
     

@@ -2,7 +2,7 @@ import { AppBar, Container, Toolbar, Box, TextField, InputAdornment, Button, Sta
 import Logo from '/public/assets/mstile-150x150.png';
 import SearchIcon from '@mui/icons-material/Search'
 import { Link, createSearchParams, useNavigate } from "react-router-dom"
-import products from "./../data/products"
+import products from "../../data/products"
 import { useState } from 'react';
 
 function Header() {
@@ -93,7 +93,9 @@ function Header() {
                 variant='contained'
                 size={ isUpMd ? 'large' : "small"}
                 
-                sx={{ color: 'secondary.light', backgroundColor:'primary.dark', height:50, fontWeight:"bolder"  }}>
+                sx={{ color: 'secondary.light', backgroundColor:'primary.dark', height:50, fontWeight:"bolder"  }}
+                onClick={() => navigate("auth/login")}
+            >
                 Entrar no sistema
             </Button>
 
