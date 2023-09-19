@@ -1,18 +1,19 @@
 import GoogleIcon from "@mui/icons-material/Google"
-import { Button, FormHelperText, IconButton, InputAdornment, Stack, TextField, Typography } from "@mui/material"
+import { Button, FormControlLabel, FormHelperText, IconButton, InputAdornment, Stack, TextField, Typography } from "@mui/material"
 import { Formik } from "formik"
 import { Link } from "react-router-dom"
 import * as Yup from 'yup'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useState } from "react"
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Checkbox } from "@mui/material"
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 import { auth } from "../../config/firebase"
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 
-function Login() {
+function SignUp() {
 
     const [visible, setVisible] = useState(false)
-    const authRef= auth
+    const authRef = auth
     const provider = new GoogleAuthProvider()
 
     function handleVisible(){
@@ -27,8 +28,7 @@ function Login() {
             console.log(error)
         }    
     }
-        
-    
+
     return (
         <Stack
             direction={"column"}
@@ -38,28 +38,40 @@ function Login() {
             mt={4}
         >
             <Typography variant ="h2" color="primary.main">
-                Entrar no sistema
+                Cadastre-se
             </Typography>
             <Typography variant="h5" color="primary.main">
-                Bem vindo ao nosso sistema!
+                Entre para FitTotal
             </Typography>
             <Formik  
-                initialValues={{email: "", password: "" }} 
+                initialValues={{email: "", password: "", passwordConfirmation: "", checkbox: false }} 
                 validationSchema={Yup.object().shape({
-                    email: Yup.string().email('E-mail inválido').required('O E-mail é obrigatório'),
-                    password: Yup.string().required('A senha é obrigatória'),
+                    email: Yup.string()
+                        .email('E-mail inválido')
+                        .required('O E-mail é obrigatório'),
+                    password: Yup.string()
+                        .matches(/^(?=.*?[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/, "A senha deve ter pelo menos uma letra maiúscula,minúscula e números"
+                        )
+                        .min(8, "A senha deve ter pelo menos 8 carácteres")
+                        .required('A senha é obrigatória'
+                        ),
+                    passwordConfirmation: Yup.string()
+                        .oneOf([Yup.ref("password"), null], "As senhas não conferem")
+                        .required("A senha dé obrigatória"),
+                    checkbox: Yup.boolean()
+                        .oneOf([true], "Você deve concordar com os termos de uso e política de privacidade")
                   })}
-                onSubmit={async (values, { setSubmitting }) => {
+                onSubmit={async(values, { setSubmitting }) => {
                     try {
-                        const res =  await signInWithEmailAndPassword(
-                            authRef, 
-                            values.email, 
+                        const res = await createUserWithEmailAndPassword(
+                            authRef,
+                            values.email,
                             values.password
                         )
-                        console.log(res);
-                        } catch(error) {
-                        console.log(error);
-                        }
+                        console.log(res)
+                    } catch (error) {
+                        console.log(error)
+                    }
             }}>
                 {({
                 values,
@@ -111,30 +123,65 @@ function Login() {
                                 {errors.password}
                             </FormHelperText>
                         )}
+
+                        <TextField 
+                            name="passwordConfirmation"
+                            id={"password"}
+                            type={visible ? "text" : "password"}
+                            value={values.passwordConfirmation}
+                            onChange={handleChange}
+                            onBlur={handleBlur} 
+                            fullWidth 
+                            label="Digite novamente a senha"
+                           
+                        />
+                        {touched.passwordConfirmation && errors.passwordConfirmation && (
+                            <FormHelperText error>
+                                {errors.passwordConfirmation}
+                            </FormHelperText>
+                        )}
                     </Stack>
                     <Stack direction={"column"} spacing={2} mt={2}>
-                    <Typography 
-                    variant="h5" 
-                    component={Link} 
-                    to="/auth/resetpassword" 
-                    sx={{textDecoration: "none"}}
-                    >
-                        Esqueci minha senha
-                    </Typography>
-                    <Button variant="contained" size="large" type="submit" sx={{
-                            color: "yellow",
-                            "&:hover": {
-                            backgroundColor: "grey",
-                            },
+                            <FormControlLabel 
+                            control={<Checkbox
+                                        name="checkbox"
+                                        color="primary"
+                                        checked={values.checkbox}
+                                        onChange={handleChange}
+                                    />}
+                            label="Eu concordo com os termos de uso e politica de privacidade"
+                            />
+                        {touched.checkbox && errors.checkbox && (
+                            <FormHelperText error>
+                                {errors.checkbox}
+                            </FormHelperText>
+                        )}
+                    <Button 
+                    variant="contained" 
+                    size="large" 
+                    type="submit"
+                    disabled={Object.keys(errors).length !== 0}
+                    sx={{
+                        color: "yellow",
+                        "&:hover": {
+                        backgroundColor: "grey",
+                        },
                         }}
                     >
-                        Entrar
+                        Cadastrar
                     </Button>
                     </Stack>
                 </form> 
             )}
             </Formik>
-            
+            <Typography 
+                    variant="h6" 
+                    component={Link} 
+                    to="/" 
+                    sx={{textDecoration: "none"}}
+                    >
+                        ou inscreva-se com sua conta google
+                    </Typography>
             <Button variant="contained"
                 sx={{
                     color: "yellow",
@@ -147,13 +194,16 @@ function Login() {
             >
                 Continue com google
             </Button>
-            <Typography variant ="h5" component={Link}
-            to="/auth/signup" sx={{textDecoration: "none"}}
+            <Typography
+             variant ="h5" 
+             component={Link}
+            to="/auth/login" sx={{textDecoration: "none"}}
             >
-                Clique aqui para fazer o seu cadastro
+                Já tem conta? Clique aqui
             </Typography>
         </Stack>
     )
 }
 
-export default Login
+
+export default SignUp
