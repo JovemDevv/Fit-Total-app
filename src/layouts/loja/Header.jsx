@@ -1,5 +1,5 @@
 import { AppBar, Container, Toolbar, Box, TextField, InputAdornment, Button, Stack, useTheme, useMediaQuery, Autocomplete } from '@mui/material'
-import Logo from '/public/assets/mstile-150x150.png';
+import Logo from '/assets/mstile-150x150.png';
 import SearchIcon from '@mui/icons-material/Search'
 import { Link, createSearchParams, useNavigate } from "react-router-dom"
 import products from "../../data/products"
