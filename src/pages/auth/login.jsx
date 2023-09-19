@@ -1,16 +1,10 @@
 import GoogleIcon from "@mui/icons-material/Google"
 import { Button, Stack, TextField, Typography } from "@mui/material"
-import { useState } from "react"
+import { Formik } from "formik"
 import { Link } from "react-router-dom"
 
 function Login() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
-    function handleSubmit() {
-        console.log(email, password)
-    }
-
+    
     return (
         <Stack
             direction={"column"}
@@ -25,23 +19,56 @@ function Login() {
             <Typography variant="h5" color="primary.main">
                 Bem vindo ao nosso sistema!
             </Typography>
-            <Stack spacing={3} width={"100%"}>
-                <TextField value={email} onChange={(e) => setEmail(e.target.value)} fullWidth label="Email" />
-                <TextField value={password}
-                onChange={(e) => setPassword(e.target.value)} fullWidth label="Senha" />
-            </Stack>
-            <Typography variant="h5" component={Link} to="/" sx={{textDecoration: "none"}}
-            >
-                Esqueci minha senha
-            </Typography>
-            <Button variant="contained" size="large" onClick={handleSubmit} sx={{
-                    color: "yellow",
-                    "&:hover": {
-                    backgroundColor: "grey",
-                    },
-                }}>
-                Entrar
-            </Button>
+            <Formik  initialValues={{email: "", password: "" }}  onSubmit={(values, { setSubmitting }) => {
+                console.log(values)
+            }}>
+                {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isSubmitting,
+            }) => (
+                <form onSubmit={handleSubmit}>
+                    <Stack spacing={3} width={"100%"}>
+                        <TextField 
+                            name="email"
+                            id="email"
+                            value={values.email} 
+                            onChange={handleChange} 
+                            fullWidth 
+                            label="Email"
+                        />
+                        <TextField 
+                            name="password"
+                            id="password"
+                            value={values.password}
+                            onChange={handleChange} 
+                            fullWidth 
+                            label="Senha"
+                        />
+                    </Stack>
+                    <Stack direction={"column"}>
+                    <Typography variant="h5" component={Link} to="/" sx={{textDecoration: "none"}}
+                    >
+                        Esqueci minha senha
+                    </Typography>
+                    <Button variant="contained" size="large" type="submit" sx={{
+                            color: "yellow",
+                            "&:hover": {
+                            backgroundColor: "grey",
+                            },
+                        }}
+                    >
+                        Entrar
+                    </Button>
+                    </Stack>
+                </form> 
+            )}
+            </Formik>
+            
             <Button variant="contained"
                 sx={{
                     color: "yellow",
