@@ -4,6 +4,8 @@ import Layout from "../layouts/loja"
 import ProductDetail from "../pages/product-detail"
 import LayoutAuth from "../layouts/auth"
 import Login from "../pages/auth/login"
+import SignUp from "../pages/auth/signUp"
+import ResetPassword from "../pages/auth/resetSenha"
 
 const routes = [
     {
@@ -33,8 +35,16 @@ const routes = [
                     {
                         path: "login",
                         element: <Login />,
-                    }
-                ]
+                    },
+                    {
+                        path: "signup",
+                        element: <SignUp />,
+                    },
+                    {
+                        path: "resetpassword",
+                        element: <ResetPassword />,
+                    },
+                ],
             },
 
         ]

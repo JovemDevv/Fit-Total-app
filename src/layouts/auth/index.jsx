@@ -7,19 +7,17 @@ function LayoutAuth() {
     const isUpMd = useMediaQuery(theme.breakpoints.up("md"));
 
     return (
-        <Grid container sx={{
-            color: "grey",
-        }}>
+        <Grid container >
             <Grid item lg={8} md={12} xs={12}>
                 <Container
                     maxWidth="xl"
                     sx={{
-                        mt: 5,
-                        minHeight: "60vh",
+                        mt: 8,
+                        minHeight: "20vh",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: isUpMd ? "flex-start" : "center",
-                        justifyContent: "center",
+                        justifyContent: "flex-start",
                     }}
                 >
                     <Stack
@@ -49,7 +47,9 @@ function LayoutAuth() {
                         backgroundImage: "url('/assets/SideBarLogin.png')",
                         backgroundRepeat: "no-repeat",
                         backgroundSize: "cover",
-                        height: "110vh",
+                        width:"138.7%",
+                        height: "77vh",
+                        marginTop: "-40px"
                     }}
                     />
                 </Grid>
