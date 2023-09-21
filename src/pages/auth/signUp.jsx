@@ -4,17 +4,18 @@ import { Formik } from "formik"
 import { Link } from "react-router-dom"
 import * as Yup from 'yup'
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useState } from "react"
+import { useContext, useState } from "react"
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Checkbox } from "@mui/material"
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
+import {  signInWithPopup,  } from "firebase/auth"
 import { auth } from "../../config/firebase"
+import { AuthContext } from "../../contexts/auth"
 
 function SignUp() {
 
     const [visible, setVisible] = useState(false)
-    const authRef = auth
-    const provider = new GoogleAuthProvider()
+
+    const {signUp} = useContext(AuthContext)
 
     function handleVisible(){
         setVisible(!visible)
@@ -62,16 +63,7 @@ function SignUp() {
                         .oneOf([true], "Você deve concordar com os termos de uso e política de privacidade")
                   })}
                 onSubmit={async(values, { setSubmitting }) => {
-                    try {
-                        const res = await createUserWithEmailAndPassword(
-                            authRef,
-                            values.email,
-                            values.password
-                        )
-                        console.log(res)
-                    } catch (error) {
-                        console.log(error)
-                    }
+                  signUp(values.email, values.password)  
             }}>
                 {({
                 values,

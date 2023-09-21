@@ -1,8 +1,7 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom"
-import routes from "./routes"
+import { createBrowserRouter } from "react-router-dom"
+import Routes from "./routes"
+import Auth from "./contexts/auth"
 
-
-const router = createBrowserRouter(routes)
 
 
 function App() {
@@ -10,7 +9,9 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
+    <Auth>
+      <Routes />
+    </Auth>
     </>
   )
 }

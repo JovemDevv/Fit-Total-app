@@ -12,11 +12,11 @@ function LayoutAuth() {
                 <Container
                     maxWidth="xl"
                     sx={{
-                        mt: 8,
-                        minHeight: "20vh",
+                        mt: 15,
+                        minHeight: "80vh",
                         display: "flex",
                         flexDirection: "column",
-                        alignItems: isUpMd ? "flex-start" : "center",
+                        alignItems: isUpMd ? "center" : "flex-start",
                         justifyContent: "flex-start",
                     }}
                 >
@@ -31,14 +31,13 @@ function LayoutAuth() {
                                 src={Logo}
                                 alt='logo da FitTotal'
                                 sx={{
-                                    marginTop: "-250px",
-                                    height: "40%",
-                                    width: "40%",
+                                    height: 100,
+                                    width: "auto"
                                 }}
                             />
                         </Link>
+                        <Outlet />
                     </Stack>
-                    <Outlet />
                 </Container>
             </Grid>
             {isUpMd && (
@@ -47,9 +46,7 @@ function LayoutAuth() {
                         backgroundImage: "url('/assets/SideBarLogin.png')",
                         backgroundRepeat: "no-repeat",
                         backgroundSize: "cover",
-                        width:"138.7%",
-                        height: "77vh",
-                        marginTop: "-40px"
+                        height: "100vh",
                     }}
                     />
                 </Grid>
@@ -58,4 +55,4 @@ function LayoutAuth() {
     );
 }
 
-export default LayoutAuth;
+export default LayoutAuth

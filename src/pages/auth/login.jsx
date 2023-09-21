@@ -1,38 +1,32 @@
 import GoogleIcon from "@mui/icons-material/Google"
 import { Button, FormHelperText, IconButton, InputAdornment, Stack, TextField, Typography } from "@mui/material"
 import { Formik } from "formik"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import * as Yup from 'yup'
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useState } from "react"
+import { useContext, useState } from "react"
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { auth } from "../../config/firebase"
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {AuthContext} from "../../contexts/auth"
 
 function Login() {
-
     const [visible, setVisible] = useState(false)
-    const authRef= auth
-    const provider = new GoogleAuthProvider()
+    const navigate = useNavigate()
+
+    const { login, socialLogin, user, signed } = useContext(AuthContext)
 
     function handleVisible(){
         setVisible(!visible)
     }
 
     async function signInGoogle() {
-        try{
-            const res = await signInWithPopup(auth,provider)
-            console.log(res)
-        } catch (error) {
-            console.log(error)
-        }    
+       socialLogin()
     }
         
     
     return (
         <Stack
             direction={"column"}
-            spacing={2}
+            spacing={3}
             width={"100%"}
             alignItems={"center"}
             mt={4}
@@ -50,16 +44,12 @@ function Login() {
                     password: Yup.string().required('A senha é obrigatória'),
                   })}
                 onSubmit={async (values, { setSubmitting }) => {
-                    try {
-                        const res =  await signInWithEmailAndPassword(
-                            authRef, 
-                            values.email, 
-                            values.password
-                        )
-                        console.log(res);
-                        } catch(error) {
-                        console.log(error);
-                        }
+                 try{
+                    const res = await login(values.email, values.password) 
+                 navigate("/home/student")
+                } catch (error) {
+                    console.log(error)
+                }
             }}>
                 {({
                 values,
@@ -71,7 +61,7 @@ function Login() {
                 isSubmitting,
             }) => (
                 <form noValidate onSubmit={handleSubmit} style={{width:"100%"}}>
-                    <Stack spacing={2} width={"100%"}>
+                    <Stack spacing={3} width={"100%"}>
                         <TextField 
                             name="email"
                             id="email"
@@ -152,6 +142,7 @@ function Login() {
             >
                 Clique aqui para fazer o seu cadastro
             </Typography>
+
         </Stack>
     )
 }

@@ -30,12 +30,7 @@ function ResetPassword() {
                     email: Yup.string().email('E-mail inválido').required('O E-mail é obrigatório'),
                   })}
                 onSubmit={ async (values, { setSubmitting }) => {
-                    try{
-                        const res = sendPasswordResetEmail(authRef, values.email)
-                        console.log(res)
-                    } catch (error) {
-                        console.log(error)
-                    }
+                    
                    
                 }}
                >
