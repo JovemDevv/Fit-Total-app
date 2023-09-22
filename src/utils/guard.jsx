@@ -9,7 +9,7 @@ function AuthGuard({children}){
 
     useEffect(()=> {
         if(!signed){
-            navigate("/home/student")
+            navigate("/student/home")// /auth/login
         }
         
     }, [signed, navigate])

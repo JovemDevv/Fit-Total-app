@@ -1,69 +1,31 @@
-import { useContext } from "react"
-import { AuthContext } from "../../contexts/auth"
-import { Box, Button, Container, Divider, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from "@mui/material"
-import Logo from "/assets/logo.png"
-import SendIcon from "@mui/icons-material/Send"
+import {  Container, Divider, Grid, Stack, useMediaQuery } from "@mui/material"
 import Header from "./Header"
 import { Outlet } from "react-router-dom"
+import Sidebar from "./../student/Sidebar"
+import { useTheme } from "@emotion/react"
+import SendIcon from "@mui/icons-material/Send"
 
-const navItems = ['inicio', 'Meu perfil', 'Meus exercícios']
+
 
 function LayoutStudent() {
-    const {logout} = useContext( AuthContext)
+    const theme = useTheme()
+    const isUpSm = useMediaQuery(theme.breakpoints.up("sm"))
 
     return (
         <>
         <Grid container>
-            <Grid item sm={2}>
-                <Stack direction={"row"} justifyContent={"space-between"}>
-                <Box sx={{height: "100vh", width:"80%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent:"space-between"
-             }}>
-
-                    <Box>
-                    <Box component="img"
-                    src={Logo}
-                    alt='logo da FitTotal'
-                    sx={{ 
-                        width:"90%", height: "auto",
-                        marginTop:"50px"
-                   }} />
-                   
-                <List sx={{ mt: 3 }}>
-                    {navItems.map((item) => (
-                        <ListItem key={item}>
-                            <ListItemButton sx={{ textAlign: "left"}}>
-                                <ListItemIcon>
-                                    <SendIcon />
-                                </ListItemIcon>
-                                <ListItemText primary={item} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                    
-                </List>
-                    </Box>
-                
-                <Button onClick={logout} variant="contained"
-                size="large"
-                sx={{
-                    color: "yellow",
-                    "&:hover": {
-                    backgroundColor: "grey",
-                    },
-                    
-                 mb: 7, borderRadius: 10, minWidth:"50%" }}>
-                    Sair
-                </Button>
-                
-                </Box>
+            {isUpSm && (
+            <Grid item lg={2} md={3} sm={4} xs={12}>
+                <Stack direction={"row"} justifyContent={"space-between"} height={"100%"} minHeight={"100vh"}>
+                    <Sidebar />
                 <Divider orientation="vertical" flexItem />
                 </Stack>
-              
             </Grid>
-            <Grid item sm={10}>
+            )}
+            <Grid item lg={10} md={9} sm={8} xs={12}>
                     <Header />
                     <Divider />
-                    <Container maxWidth={"xl"}>
+                    <Container maxWidth={"xl"}  sx={{mt:4 ,pd:5}}>
                         <Outlet />
                     </Container>
             </Grid>
