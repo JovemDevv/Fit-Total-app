@@ -9,7 +9,7 @@ function MainGuard({children}){
 
     useEffect(()=> {
         if(!signed){
-            navigate("auth/login")
+            navigate("/auth/login")// /student/home
         }
         
     }, [signed, navigate])

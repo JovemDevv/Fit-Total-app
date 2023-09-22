@@ -46,7 +46,7 @@ function Login() {
                 onSubmit={async (values, { setSubmitting }) => {
                  try{
                     const res = await login(values.email, values.password) 
-                 navigate("/home/student")
+                 navigate("/student/home")
                 } catch (error) {
                     console.log(error)
                 }

@@ -1,39 +1,52 @@
-import { AppBar, Container, Toolbar, Box, TextField, InputAdornment, Button, Stack, useTheme, useMediaQuery, Autocomplete, Typography, Avatar } from '@mui/material'
-import Logo from '/assets/mstile-150x150.png';
-import SearchIcon from '@mui/icons-material/Search'
-import { Link, createSearchParams, useNavigate } from "react-router-dom"
-import products from "../../data/products"
+import { AppBar, Container, Toolbar, Box, Button, useTheme, useMediaQuery, Typography, Avatar, Drawer, IconButton } from '@mui/material'
 import { useState } from 'react';
+import Sidebar from './Sidebar';
+import MenuIcon from '@mui/icons-material/Menu';
+
+const drawerWidth =240
 
 function Header() {
   const theme = useTheme()
-  const isUpMd = useMediaQuery(theme.breakpoints.up("md"))
+  const isUpSm = useMediaQuery(theme.breakpoints.up("sm"))
+  const [mobileOpen, setMobileOpen] = useState(false)
 
-  function handleSubmit() {
-    navigate({
-      pathname: "/products",
-      search: createSearchParams({
-        q: value,
-      }).toString(),
-    })
-  }
+  const handleDrawerToggle = () => {
+    setMobileOpen((prevState) => !prevState);
+  };
+
   return (
-    <AppBar position='static' elevation={1} sx={{ backgroundColor: "primary.main", height: "15vh", padding:0,   }}>
+    <>
+    <AppBar position='static' elevation={1} sx={{ backgroundColor: "primary.main", height: "15vh", padding:0, 
+      }}
+      >
       <Container maxWidth={"xl"}>
         <Toolbar sx={{ 
             display:"flex", justifyContent:"space-between",
             alignItems:'flex-start',
-            marginTop:'20px',mt:5
+            mt:2
             }}
         >
-          <Typography variant="h3" sx={{mt:2}} color={"secondary.main"}>
-            Bem vindo (a) pessoa x!
-          </Typography>
+          {
+            isUpSm ? (
+              <Typography variant="h3"  color={"secondary.main"}>
+              Bem vindo (a) pessoa x!
+            </Typography>
+            ) : <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon sx={{ fontSize: 40 }} />
+          </IconButton>
+          }
+         
             <Button
                 variant='contained'
-                size={ isUpMd ? 'large' : "small"}
+                size={ isUpSm ? 'large' : "small"}
                 
-                sx={{ color: 'secondary.light', backgroundColor:'primary.dark', height:60, width: 250, justifyContent:"flex-start", fontWeight:"bolder"  }}
+                sx={{ color: 'secondary.light', backgroundColor:'primary.dark', height:60, width: isUpSm ? 300 : 150, justifyContent:"flex-start", fontWeight:"bolder"  }}
                 startIcon={
                   <Avatar alt="Remy Sharp" src='/assets/avatar.jpeg' />
                 } 
@@ -44,6 +57,26 @@ function Header() {
         </Toolbar>
       </Container>
     </AppBar>
+    <Box component="nav">
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        modalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          display: { xs: "block", sm: "none" },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: drawerWidth,
+          }
+        }}
+        >
+          <Sidebar />
+        </Drawer>
+    </Box>
+  </>
   );
 }
 
