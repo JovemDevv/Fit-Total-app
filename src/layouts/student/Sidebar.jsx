@@ -48,7 +48,9 @@ function Sidebar(){
                 </List>
                     
                 </Box>
-                <Button onClick={logout} variant="contained"
+                <Button onClick={logout} 
+                
+                variant="contained"
                 size="large"
                 sx={{
                     color: "yellow",
@@ -57,8 +59,10 @@ function Sidebar(){
                     },
                     
                  mb: 10, borderRadius: 10, minWidth:"50%" }}>
+                    
                     Sair
                 </Button> 
+                
             </Box>
             
     )

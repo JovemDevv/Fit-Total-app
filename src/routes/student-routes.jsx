@@ -5,7 +5,7 @@ import HomeStudent from "../pages/student/home"
 import Profile from "../pages/student/profile"
 import AuthGuard from "../utils/guard"
 
-const PrivatedRoutes = [
+const StudantRoutes = [
     {
         path: "/student",
         element:(
@@ -31,4 +31,4 @@ const PrivatedRoutes = [
     
 ]
 
-export default PrivatedRoutes
+export default StudantRoutes

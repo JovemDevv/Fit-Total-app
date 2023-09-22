@@ -1,7 +1,8 @@
 import { AppBar, Container, Toolbar, Box, Button, useTheme, useMediaQuery, Typography, Avatar, Drawer, IconButton } from '@mui/material'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Sidebar from './Sidebar';
 import MenuIcon from '@mui/icons-material/Menu';
+import { AuthContext } from '../../contexts/auth';
 
 const drawerWidth =240
 
@@ -9,6 +10,7 @@ function Header() {
   const theme = useTheme()
   const isUpSm = useMediaQuery(theme.breakpoints.up("sm"))
   const [mobileOpen, setMobileOpen] = useState(false)
+  const {profile} = useContext(AuthContext)
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -29,7 +31,7 @@ function Header() {
           {
             isUpSm ? (
               <Typography variant="h3"  color={"secondary.main"}>
-              Bem vindo (a) pessoa x!
+              Bem vindo (a) {profile?.name}
             </Typography>
             ) : <IconButton
             color="inherit"
@@ -48,10 +50,10 @@ function Header() {
                 
                 sx={{ color: 'secondary.light', backgroundColor:'primary.dark', height:60, width: isUpSm ? 300 : 150, justifyContent:"flex-start", fontWeight:"bolder"  }}
                 startIcon={
-                  <Avatar alt="Remy Sharp" src='/assets/avatar.jpeg' />
+                  <Avatar alt="avatar" src={profile?.urlImage} />
                 } 
             >
-                Pessoa X
+                {profile?.name}
             </Button>
 
         </Toolbar>
