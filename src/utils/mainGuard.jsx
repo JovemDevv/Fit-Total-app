@@ -1,19 +1,18 @@
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import { AuthContext } from "../contexts/auth"
-import { useNavigate } from "react-router-dom"
+import { Navigate} from "react-router-dom"
 
 function MainGuard({children}){
 
-    const {signed} = useContext( AuthContext )
-    const navigate = useNavigate()
-
-    useEffect(()=> {
-        if(!signed){
-            navigate("/auth/login")// /student/home
-        }
-        
-    }, [signed, navigate])
-    return children
+    const {signed, loading} = useContext( AuthContext )
+    
+    return !loading ? (
+    !signed ? (
+        <Navigate to={"/student/home"} />
+     ) : (
+        children
+     )
+    ) : undefined
 }
 
 export default MainGuard

@@ -1,28 +1,60 @@
-
 import {  Box, Grid, InputLabel, Stack, TextField, FormHelperText, Button, Avatar, FormLabel } from "@mui/material"
 import { Formik } from "formik"
 import * as Yup from 'yup'
 import { PatternFormat } from 'react-number-format'
+import { useContext, useEffect, useState } from "react"
+import { AuthContext } from "../../contexts/auth"
+import { setPhoto } from "../../services/profile"
 
 function Profile() {
+
+    const [avatar, setAvatar] = useState("")
+
+    const {updateProfileUser, profile, user} = useContext(AuthContext)
+    const [fileData, setFileData] = useState()
+
+    useEffect(() => {
+        if(profile && profile.urlImage){
+            setAvatar(profile.urlImage)
+        }
+    }, [profile])
+
+    function handleAvatar(e){
+        const fileUser = e.target.files[0]
+        setFileData(fileUser)
+        setAvatar(URL.createObjectURL())
+        
+    }
+
+    async function uploadFileImage(){
+        console.log(fileData )
+        try{
+           const url = await setPhoto(fileData, user.uid)
+           setAvatar(url)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     
     return (
         <>
         <Grid container>
         <Box sx={{width:"80%"}}>
         <Formik  
+                enableReinitialize
                 initialValues={{
-                    name:"",
-                    lastname: "",
-                    email: "",
-                    phone: "",
-                    cpf:"",
-                    city:"",
-                    cep: "", 
-                    street: "",
-                    neighborhood: "",
-                    number:"",
-                    complement:"",}} 
+                    name: profile?.name ? profile?.name : "",
+                    lastname: profile?.lastname ? profile?.lastname: "",
+                    email: profile?.email ? profile?.email : "",
+                    phone: profile?.phone ? profile?.phone : "",
+                    cpf:profile?.cpf ? profile?.cpf : "",
+                    city:profile?.city ? profile?.city : "",
+                    cep: profile?.cep ? profile?.cep : "", 
+                    street: profile?.street ? profile?.street : "",
+                    neighborhood: profile?.neighborhood ? profile?.neighborhood : "",
+                    number:profile?.number ? profile?.number : "",
+                    complement:profile?.complement ? profile?.complement : "",
+                }} 
                 validationSchema={Yup.object().shape({
                     name: Yup.string().required('Este campo é obrigatório preencher'),
                     lastname: Yup.string().required('Este campo é obrigatório preencher'),
@@ -37,7 +69,12 @@ function Profile() {
                     
                   })}
                 onSubmit={async (values, { setSubmitting }) => {
-                 console.log(values)
+                 try {
+                    await updateProfileUser(values)
+                    alert("Perfil atualizado com sucesso!")
+                 } catch (error){
+                    console.log(error)
+                 }
             }}>
                 {({
                 values,
@@ -52,11 +89,25 @@ function Profile() {
                 >
                     <Grid container spacing={2}>
                     <Grid item lg={12} mb={4}>
-                        <Stack alignItems={"flex-start"}>
-                        <FormLabel htmlFor="photo" sx={{ cursor: "pointer", overflow: "hidden", borderRadius:"50%"}}>
-                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{height: 120, width: 120 }} />
+                        <Stack alignItems={"center"}>
+                        
+                        <FormLabel htmlFor="photo" sx={{ cursor: "pointer", overflow: "hidden", borderRadius:"50%"}}
+                        >
+                            <Avatar alt="Remy Sharp" src={avatar} sx={{height: 180, width: 180 }} />
                         </FormLabel>
-                        <TextField type="file" name="photo" id="photo" sx={{ display: "none" }} /> 
+                        <TextField type="file" name="photo" id="photo" onChange={(e) => handleAvatar(e)}  sx={{ display: "none" }} 
+                        />
+                         <Button
+                                    variant="contained"
+                                    size="large"
+                                    onClick={uploadFileImage}
+                                    sx={{mt:2, width:200 }}
+                                
+                            >
+                                Atualizar foto
+                            </Button>  
+                       
+                        
                         </Stack>
                         
                         </Grid>
@@ -108,7 +159,8 @@ function Profile() {
                                 name="email"
                                 id="email"
                                 type="email"
-                                value={values.email} 
+                                disabled={true}
+                                value={user ? values.email : ""} 
                                 onChange={handleChange} 
                                 onBlur={handleBlur}
                                 fullWidth 

@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react"
 import { auth } from "../config/firebase"
-import { GoogleAuthProvider, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
+import { GoogleAuthProvider, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup,  } from "firebase/auth"
+import { getProfile,  setProfileData, updateProfile } from "./../services/profile"
 
 export const AuthContext = createContext([])
 const authRef= auth
@@ -8,18 +9,40 @@ const provider = new GoogleAuthProvider()
 
 function Auth({children}) {
     const [user, setUser] = useState(null)
+    const [profile, setProfile] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const userStorage = window.localStorage.getItem('@User');
     
         if (userStorage) {
             setUser(JSON.parse(userStorage));
+            setLoading(false)
         } else {
             setUser(null);
+            setLoading(false)
         }
     }, []);
     
+    useEffect(() => {
+        async function getProfileUser(){
+        try{
+            const res = await getProfile(user.uid)
+            if(res){
+                setProfile(res)
+            }
+            
+        } catch (error) {
+            console.log(error)
+        }
+        
+        }
+        if (user){
 
+            getProfileUser()
+        }
+           
+    }, [user]);
     
 
     async function login(email, password) {
@@ -39,18 +62,19 @@ function Auth({children}) {
             }
     }
 
-    async function signUp(email, password) { 
+    async function signUp(authRef, email, password) { 
         try {
             const res = await createUserWithEmailAndPassword(
                 authRef,
                 email,
                 password
             )
-            console.log(res)
+            await setProfileData({email}, res.user.uid)
         } catch (error) {
             console.log(error)
         }
     }
+    
 
     async function forgotPassword(email) { 
         try{
@@ -77,9 +101,21 @@ function Auth({children}) {
         setUser(null)
     }
 
+    async function updateProfileUser(data) {
+        try {
+            await updateProfile(data, user.uid)
+            const res = await getProfile(user.uid)
+            if(res){
+                setProfile(res)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <>
-        <AuthContext.Provider  value={{ signed:!!user, user, login, signUp, forgotPassword, socialLogin, logout }}>
+        <AuthContext.Provider  value={{ signed:!!user, user, profile, loading, login, signUp, forgotPassword, socialLogin, logout, updateProfileUser }}>
           {children}
         </AuthContext.Provider>
         </>

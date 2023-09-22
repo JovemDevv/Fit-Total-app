@@ -1,20 +1,20 @@
 
+
 import { useContext} from "react"
 import { AuthContext } from "../contexts/auth"
 import { Navigate } from "react-router-dom"
 
-function AuthGuard({children}){
+function AdminGuard({children}){
     
-    const {signed, loading, user} = useContext( AuthContext )
+    const {signed, loading} = useContext( AuthContext )
     
     return !loading ? (
-    !signed ? (
+    signed ? (
         <Navigate to={"/auth/login"} />
-     ) : UserActivation.email === "admin@gmail.com" ? (<Navigate to={"/admin/home"} />
      ) : (
-        children
+    user.email === 'admin@gmail.com' ? children : <Navigate to={"/studant/home"} />
      )
     ) : undefined
 }
 
-export default AuthGuard
+export default AdminGuard

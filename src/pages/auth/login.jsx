@@ -44,12 +44,22 @@ function Login() {
                     password: Yup.string().required('A senha é obrigatória'),
                   })}
                 onSubmit={async (values, { setSubmitting }) => {
-                 try{
-                    const res = await login(values.email, values.password) 
-                 navigate("/student/home")
-                } catch (error) {
-                    console.log(error)
-                }
+                 try {
+    const res = await login(values.email, values.password);
+    if(res.user.email === "admin@gmail.com"){
+        navigate("/admin/home");
+    }
+    if (res instanceof Error) {
+        // Trate o erro de login aqui, por exemplo, exibindo uma mensagem de erro para o usuário.
+        console.log("Erro de login:", res.message);
+    } else {
+        // O login foi bem-sucedido, redirecione o usuário.
+        navigate("/student/home");
+    }
+} catch (error) {
+    console.log(error);
+}
+
             }}>
                 {({
                 values,
@@ -148,3 +158,4 @@ function Login() {
 }
 
 export default Login
+
