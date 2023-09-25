@@ -18,8 +18,8 @@ Este é um sistema de academia que permite aos usuários realizar login de forma
 - Conta no Firebase para configurar o Firebase Authentication e o Firebase Realtime Database.
   
 ## Instalação
-- Clone este repositório: git clone https://github.com/seu-usuario/sistema-de-academia.git
-- Navegue até o diretório do projeto: cd sistema-de-academia
+- Clone este repositório: git clone [https://github.com/seu-usuario/sistema-de-academia.git](https://github.com/JovemDevv/Fit-Total-app.git)
+- Navegue até o diretório do projeto: cd Fit-Total-app
 - Instale as dependências: npm install
 - Configure o Firebase:
 - Crie um projeto no Firebase.
